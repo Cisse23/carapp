@@ -1,11 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-material.css';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import Carlist from './components/Carlist';
-import AddCar from './AddCar';
-import EditCar from './EditCar';
 //import { API_URL } from './constants';
 
 function App() {

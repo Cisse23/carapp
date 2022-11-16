@@ -3,7 +3,8 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-material.css';
 import { Button } from '@mui/material';
-import EditCar from '../EditCar';
+import AddCar from './AddCar';
+
 
 function Carlist(){
   const [cars, setCars] = useState([]);
@@ -15,22 +16,23 @@ function Carlist(){
     {field: 'fuel', sortable: true, filter: true},
     {field: 'year', sortable: true, filter: true, width:120},
     {field: 'price', sortable: true, filter: true, width:150},
-    {
+    {field: 'delete', width:120,
       cellRenderer: params => 
       <Button 
       size='small'
       color='error'
-      onClick={() => deleteCar(params.data)}>
+      onClick={() => deleteCar(params.data)}
+      >
         Delete
       </Button>
     },
-    {
+    {field: 'edit', width:150,
       cellRenderer: params =>
       <Button
         size='small'
-        onClick={() => addCar()}
+        onClick={() => editCar(params.data)}
       >
-        Add Car
+        Edit Car
       </Button>
     }
   ]);
@@ -87,19 +89,38 @@ function Carlist(){
       else alert('Add car / something went wrong')
     })
     .catch(err => console.error)
-
   }
+
+  const editCar = (car, data) => {
+    //console.log("edit: " + data);
+    fetch(data._links.car.href,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type':'application/json'
+        },
+        body: JSON.stringify(car)
+      })
+    .then(response => {
+      if(response.ok)
+        getCars();
+      else alert('Edit car / something went wrong')
+    })
+    .catch(err => console.error)
+  }
+
   
   return(
-        <div className='ag-theme-material' style={{height: 600, width: '90%', margin:'auto'}}>
+    <div className='ag-theme-material' style={{height: 600, width: '90%', margin:'auto'}}>     
+      <AddCar addCar={addCar} />
       <AgGridReact 
         rowData={cars}
         columnDefs={columnDefs}
         pagination={true}
         paginationPageSize={10}
       />
-        </div>
-    );
+    </div>
+  );
 }
 export default Carlist;
 

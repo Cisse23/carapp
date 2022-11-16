@@ -1,45 +1,101 @@
-import React, { useState } from "react";
-import { Button } from "@mui/material";
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 
-function AddCar(){
-const [open, setOpen] = useState(false);
-const [car, setCar] = useState({brand: '', model: '', color: '', fuel: '', year: '', price: ''});
+export default function AddCar(props) {
+  const [open, setOpen] = React.useState(false);
+  const [car, setCar] = React.useState({
+    brand: '',
+    model: '',
+    color: '', 
+    fuel: '', 
+    year: '',
+    price: ''
+  })
 
-const handleClickOpen = () => {
+  const handleClickOpen = () => {
     setOpen(true);
-  }
+  };
 
   const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSave = () => {
+    //vois lisätä validoinnin että vuosi ja hinta on numeroita
+    //esim react hook form kirjasto
+    console.log(car);
     props.addCar(car);
     setOpen(false);
   }
 
-  const handleCancel = () => {
-    setOpen(false);
-  }
-
-  const inputChanged = (event) => {
-    setCar({...car, [event.target.name]: event.target.value});
-  }
-
-
-    return(
-        <div>
-            <Button>
-                Add Car
-            </Button>
-        </div>
-    )
+  return (
+    <div>
+      <br></br>
+      <Button variant="outlined" onClick={handleClickOpen}>
+        Add Car
+      </Button>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Add new car</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            label="Brand"
+            value={car.brand}
+            onChange={e => setCar({...car, brand: e.target.value})}
+            fullWidth
+            variant="standard"
+          />
+            <TextField
+            margin="dense"
+            label="Model"
+            value={car.model}
+            onChange={e => setCar({...car, model: e.target.value})}
+            fullWidth
+            variant="standard"
+          />
+            <TextField
+            margin="dense"
+            label="Color"
+            value={car.color}
+            onChange={e => setCar({...car, color: e.target.value})}
+            fullWidth
+            variant="standard"
+          />
+            <TextField
+            margin="dense"
+            label="Fuel"
+            value={car.fuel}
+            onChange={e => setCar({...car, fuel: e.target.value})}
+            fullWidth
+            variant="standard"
+          />
+            <TextField
+            margin="dense"
+            label="Year"
+            value={car.year}
+            onChange={e => setCar({...car, year: e.target.value})}
+            fullWidth
+            variant="standard"
+          />
+            <TextField
+            margin="dense"
+            label="Price"
+            value={car.price}
+            onChange={e => setCar({...car, price: e.target.value})}
+            fullWidth
+            variant="standard"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleSave}>Save</Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
 }
-
-export default AddCar;
-
-/*
-    {field: 'brand', sortable: true, filter: true},
-    {field: 'model', sortable: true, filter: true},
-    {field: 'color', sortable: true, filter: true},
-    {field: 'fuel', sortable: true, filter: true},
-    {field: 'year', sortable: true, filter: true, width:120},
-    {field: 'price', sortable: true, filter: true, width:150},
-
-*/
