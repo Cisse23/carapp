@@ -2,77 +2,103 @@ import React, {useState, useEffect} from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-material.css';
+import { Button } from '@mui/material';
 
 function Carlist(){
-    return(
-        <div>
-            Carlist
-        </div>
-    );
-}
-export default Carlist;
-
-/*
-import React, { useState, useEffect } from 'react';
-import { AgGridReact } from 'ag-grid-react';
-
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-material.css';
-
-export default function Carlist() {
   const [cars, setCars] = useState([]);
-
+  
   const [columnDefs] = useState([
     {field: 'brand', sortable: true, filter: true},
     {field: 'model', sortable: true, filter: true},
     {field: 'color', sortable: true, filter: true},
     {field: 'fuel', sortable: true, filter: true},
-    {field: 'year', sortable: true, filter: true, width: 120},
-    {field: 'price', sortable: true, filter: true, width: 150},
+    {field: 'year', sortable: true, filter: true, width:120},
+    {field: 'price', sortable: true, filter: true, width:150},
     {
       cellRenderer: params => 
-        <button onClick={() => deleteCar(params.data)}>Delete</button>
+      <Button 
+      size='small'
+      color='error'
+      onClick={() => deleteCar(params.data)}>
+        Delete
+      </Button>
+    },
+    {
+      cellRenderer: params =>
+      <Button
+        size='small'
+        onClick={() => addCar()}
+      >
+        Add Car
+      </Button>
     }
-  ])
+  ]);
 
   useEffect(() => {
-    getCars();
-  }, []);
-
-  const getCars = () => {
-    fetch('http://carrestapi.herokuapp.com/cars')
+    fetch('https://carrestapi.herokuapp.com/cars')
     .then(response => {
-      if (response.ok)
+      if(response.ok)
         return response.json();
-      else
-        alert('Something went wrong');
+      else  
+        alert('hups!' + response.statusText);
     })
     .then(data => setCars(data._embedded.cars))
     .catch(err => console.error)
-  }
+  }, []);
+
+  const getCars = (() => {
+    fetch('https://carrestapi.herokuapp.com/cars')
+    .then(response => {
+      if(response.ok)
+        return response.json();
+      else  
+        alert('get cars error: ' + response.statusText);
+    })
+    .then(data => setCars(data._embedded.cars))
+    .catch(err => console.error)
+  }, []);
+  
 
   const deleteCar = (data) => {
-    if (window.confirm('Are you sure?')) {
-      fetch(data._links.car.href, {method: 'DELETE'})
-      .then(response => {
-        if (response.ok)
-          getCars();
-        else 
-          alert('Something went wrong in deletion');
-      })
-      .catch(err => console.error(err))
-    }
-  }
+    if (window.confirm('Are you sure?'))
+    //console.log(data);
+    fetch(data._links.car.href, {method: 'DELETE'})
+    .then(response => {
+      if(response.ok)
+        getCars();
+      else alert('Delete car / something went wrong')
+    })
+    .catch(err => console.error)
+  }  
 
+  const addCar = (car) => {
+    fetch('https://carrestapi.herokuapp.com/cars',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify(car)
+    })
+    .then(response => {
+      if(response.ok)
+        getCars();
+      else alert('Add car / something went wrong')
+    })
+    .catch(err => console.error)
+
+  }
+  
   return(
-    <div className='ag-theme-material' style={{height: 650, width: '90%', margin:'auto'}}>
+        <div className='ag-theme-material' style={{height: 600, width: '90%', margin:'auto'}}>
       <AgGridReact 
         rowData={cars}
         columnDefs={columnDefs}
         pagination={true}
         paginationPageSize={10}
       />
-    </div>
-  );
+        </div>
+    );
 }
-*/
+export default Carlist;
+

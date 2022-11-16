@@ -64,7 +64,7 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div className='ag-theme-material' style={{height: 600, width: '90%', margin:'auto'}}>
       <AppBar position='static'>
         <Toolbar>
           <Typography variant='h6'>
@@ -72,7 +72,12 @@ function App() {
           </Typography>
         </Toolbar>
       </AppBar>
-
+      <AgGridReact 
+        rowData={cars}
+        columnDefs={columnDefs}
+        pagination={true}
+        paginationPageSize={10}
+      />
       <Carlist />
     </div>
   );
