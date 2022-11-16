@@ -4,6 +4,9 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-material.css';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import Carlist from './components/Carlist';
+import AddCar from './AddCar';
+import EditCar from './EditCar';
+//import { API_URL } from './constants';
 
 function App() {
   const [cars, setCars] = useState([]);
@@ -14,8 +17,18 @@ function App() {
     {field: 'color', sortable: true, filter: true},
     {field: 'fuel', sortable: true, filter: true},
     {field: 'year', sortable: true, filter: true, width:120},
-    {field: 'price', sortable: true, filter: true, width:150},
+    {field: 'price', sortable: true, filter: true, width:150}, //lisää field edit napille
     {
+      width:120,
+      cellRenderer: params => 
+      <Button 
+      size='small'
+      onClick={() => updateCar(params.data)}>
+        Edit
+      </Button>
+    },
+    {
+      width:120,
       cellRenderer: params => 
       <Button 
       size='small'
@@ -27,7 +40,7 @@ function App() {
   ]);
 
   useEffect(() => {
-    fetch('https://carrestapi.herokuapp.com/cars')
+    fetch('https://carstockrest.herokuapp.com/cars')
     .then(response => {
       if(response.ok)
         return response.json();
@@ -39,7 +52,7 @@ function App() {
   }, []);
 
   const getCars = (() => {
-    fetch('https://carrestapi.herokuapp.com/cars')
+    fetch('https://carstockrest.herokuapp.com/cars')
     .then(response => {
       if(response.ok)
         return response.json();
@@ -63,6 +76,36 @@ function App() {
     .catch(err => console.error)
   }
 
+  const addCar = (car) => {
+    fetch('https://carstockrest.herokuapp.com/cars', {
+      method: 'POST',
+      headers: {'Content-type': 'application/json'},
+      body: JSON.stringify(car)
+    })
+    .then(response => {
+      if(response.ok)
+      getCars();
+      else
+        alert("joku lisäys hätä");
+    })
+    .catch(err => console.log(err))
+  }
+
+  const updateCar = (car, url) => {
+    fetch(url, {
+      method: 'PUT',
+      headers: {'Content-type' : 'application/json'},
+      body: JSON.stringify(car)
+    })
+    .then(response => {
+      if(response.ok)
+      getCars();
+      else
+        alert("joku editointi hätä");
+    })
+    .catch(err => console.log(err))
+  }
+
   return (
     <div className="App">
       <AppBar position='static'>
@@ -72,7 +115,6 @@ function App() {
           </Typography>
         </Toolbar>
       </AppBar>
-
       <Carlist />
     </div>
   );
