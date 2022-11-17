@@ -4,6 +4,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-material.css';
 import { Button } from '@mui/material';
 import AddCar from './AddCar';
+import EditCar from './EditCar'
 
 
 function Carlist(){
@@ -28,12 +29,7 @@ function Carlist(){
     },
     {field: 'edit', width:150,
       cellRenderer: params =>
-      <Button
-        size='small'
-        onClick={() => editCar(params.data)}
-      >
-        Edit Car
-      </Button>
+      <EditCar editCar={editCar}/>
     }
   ]);
 

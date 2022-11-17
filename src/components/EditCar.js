@@ -20,7 +20,7 @@ export default function EditCar(props){
 
   const handleClickOpen = () => {
     setOpen(true);
-    console.log(props.data);
+    console.log("Editing: " + props.data);
     setCar({
         brand: props.data.brand,
         model: props.data.model,
@@ -42,7 +42,7 @@ export default function EditCar(props){
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <Button size="small" onClick={handleClickOpen}>
         Edit Car
       </Button>
       <Dialog open={open} onClose={handleClose}>
