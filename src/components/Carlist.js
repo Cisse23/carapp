@@ -29,7 +29,7 @@ function Carlist(){
     },
     {field: 'edit', width:150,
       cellRenderer: params =>
-      <EditCar editCar={editCar}/>
+      <EditCar data={params.data} editCar={editCar}/>
     }
   ]);
 
